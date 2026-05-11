@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmare Prezență · Nunta Noastră</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Italianno&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef;
+    --cream-deep: #f3ecdd;
+    --gold: #b8924a;
+    --gold-light: #d4b577;
+    --gold-deep: #8a6a30;
+    --ink: #2b1f12;
+    --ink-soft: #5a4a32;
+    --line: rgba(184, 146, 74, 0.25);
+    --shadow: 0 20px 60px -20px rgba(138, 106, 48, 0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+    font-size: 18px;
+    background-image:
+      radial-gradient(ellipse at top, rgba(212, 181, 119, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(184, 146, 74, 0.08) 0%, transparent 60%);
+  }
+
+  /* Decorative corners */
+  .corner-flourish {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 0;
+  }
+  .corner-flourish.tl { top: 24px; left: 24px; }
+  .corner-flourish.tr { top: 24px; right: 24px; transform: scaleX(-1); }
+  .corner-flourish.bl { bottom: 24px; left: 24px; transform: scaleY(-1); }
+  .corner-flourish.br { bottom: 24px; right: 24px; transform: scale(-1, -1); }
+
+  @media (max-width: 720px) {
+    .corner-flourish { width: 70px; height: 70px; opacity: 0.3; }
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 32px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp 0.9s ease-out;
+  }
+
+  .monogram {
+    font-family: 'Italianno', cursive;
+    font-size: 96px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -2px;
+  }
+
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 18px 0 24px;
+    color: var(--gold);
+  }
+  .ornament::before, .ornament::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .ornament svg { width: 16px; height: 16px; }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink-soft);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* Card */
+  .card {
+    background: rgba(255, 252, 245, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 48px 44px;
+    box-shadow: var(--shadow);
+    position: relative;
+    animation: fadeUp 1s ease-out 0.15s backwards;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  @media (max-width: 540px) {
+    .container { padding: 40px 18px 60px; }
+    .card { padding: 32px 24px; }
+    .monogram { font-size: 72px; }
+    h1 { font-size: 20px; letter-spacing: 4px; }
+    .subtitle { font-size: 17px; }
+  }
+
+  /* Form */
+  .field {
+    margin-bottom: 28px;
+  }
+
+  label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .required {
+    color: var(--gold);
+  }
+
+  input[type="text"], input[type="number"], textarea, select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 10px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    color: var(--ink);
+    transition: border-color 0.3s ease;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-bottom-color: var(--gold);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 70px;
+    font-style: italic;
+  }
+
+  /* Radio group for cazare */
+  .radio-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .radio-option {
+    flex: 1;
+    position: relative;
+  }
+
+  .radio-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .radio-option label {
+    display: block;
+    text-align: center;
+    padding: 14px 12px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    cursor: pointer;
+    margin: 0;
+    transition: all 0.25s ease;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    background: rgba(255, 252, 245, 0.4);
+  }
+
+  .radio-option input:checked + label {
+    background: var(--gold);
+    color: var(--cream);
+    border-color: var(--gold);
+    box-shadow: 0 4px 16px -6px rgba(184, 146, 74, 0.6);
+  }
+
+  .radio-option label:hover {
+    border-color: var(--gold-light);
+  }
+
+  /* Number with controls */
+  .number-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--line);
+    padding: 4px 0;
+  }
+  .number-wrap input { border-bottom: none; text-align: center; flex: 1; padding: 6px 0; }
+  .num-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--gold-deep);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: 'Cormorant Garamond', serif;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .num-btn:hover { background: var(--gold); color: var(--cream); border-color: var(--gold); }
+
+  /* Submit */
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-btn:hover {
+    background: var(--gold-deep);
+    letter-spacing: 5px;
+  }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Success state */
+  .success-state {
+    text-align: center;
+    padding: 20px 0;
+    animation: fadeUp 0.7s ease-out;
+  }
+  .success-state .check {
+    width: 70px;
+    height: 70px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: var(--gold);
+  }
+  .success-state h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .success-state p { font-style: italic; color: var(--ink-soft); font-size: 19px; }
+
+  /* Admin button (discreet) */
+  .admin-link {
+    position: fixed;
+    bottom: 12px;
+    right: 16px;
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.4;
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    z-index: 10;
+  }
+  .admin-link:hover { opacity: 1; }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 31, 18, 0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-backdrop.show { display: flex; animation: fadeIn 0.3s; }
+  .modal {
+    background: var(--cream);
+    border: 1px solid var(--gold);
+    padding: 40px;
+    max-width: 920px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: var(--shadow);
+  }
+  .modal::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--line);
+    pointer-events: none;
+  }
+  .modal h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--gold-deep);
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--gold-deep);
+    line-height: 1;
+    padding: 6px;
+  }
+  .modal-close:hover { color: var(--ink); }
+
+  /* Password screen */
+  .password-form { max-width: 320px; margin: 0 auto; }
+  .password-form .field { margin-bottom: 20px; }
+  .password-form input { text-align: center; letter-spacing: 8px; font-size: 18px; }
+  .error-msg { color: #a04a3a; font-style: italic; text-align: center; margin-top: 12px; font-size: 15px; height: 20px; }
+
+  /* Stats */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat {
+    text-align: center;
+    padding: 16px 8px;
+    border: 1px solid var(--line);
+    background: rgba(255, 252, 245, 0.5);
+  }
+  .stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    color: var(--gold-deep);
+    font-weight: 500;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-family: 'Cinzel', serif;
+    margin-top: 6px;
+  }
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th {
+    background: var(--cream-deep);
+    padding: 12px 14px;
+    text-align: left;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    border-bottom: 1px solid var(--gold-light);
+    white-space: nowrap;
+  }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(212, 181, 119, 0.08); }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--ink-soft); font-style: italic; }
+
+  /* Action buttons */
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    padding: 12px 24px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold-deep);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn:hover { background: var(--gold); color: var(--cream); }
+  .btn-primary { background: var(--gold); color: var(--cream); }
+  .btn-primary:hover { background: var(--gold-deep); border-color: var(--gold-deep); }
+  .btn-danger { border-color: #a04a3a; color: #a04a3a; }
+  .btn-danger:hover { background: #a04a3a; color: var(--cream); }
+
+  .delete-cell button {
+    background: none; border: none; color: #a04a3a;
+    cursor: pointer; font-size: 16px; padding: 4px 8px;
+  }
+  .delete-cell button:hover { color: #c25a48; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .loading { text-align: center; padding: 40px; font-style: italic; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<!-- Decorative corners -->
+<svg class="corner-flourish tl" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 10 Q 10 40, 40 40 M10 10 Q 40 10, 40 40" stroke="#b8924a" stroke-width="0.8" fill="none"/>
+  <path d="M10 10 Q 10 70, 70 70 M10 10 Q 70 10, 70 70" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.6"/>
+  <circle cx="10" cy="10" r="2" fill="#b8924a"/>
+  <circle cx="40" cy="40" r="1.5" fill="#b8924a"/>
+</svg>
+<svg class="corner-flourish tr" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 10 Q 10 40, 40 40 M10 10 Q 40 10, 40 40" stroke="#b8924a" stroke-width="0.8" fill="none"/>
+  <path d="M10 10 Q 10 70, 70 70 M10 10 Q 70 10, 70 70" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.6"/>
+  <circle cx="10" cy="10" r="2" fill="#b8924a"/>
+  <circle cx="40" cy="40" r="1.5" fill="#b8924a"/>
+</svg>
+<svg class="corner-flourish bl" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 10 Q 10 40, 40 40 M10 10 Q 40 10, 40 40" stroke="#b8924a" stroke-width="0.8" fill="none"/>
+  <path d="M10 10 Q 10 70, 70 70 M10 10 Q 70 10, 70 70" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.6"/>
+  <circle cx="10" cy="10" r="2" fill="#b8924a"/>
+</svg>
+<svg class="corner-flourish br" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 10 Q 10 40, 40 40 M10 10 Q 40 10, 40 40" stroke="#b8924a" stroke-width="0.8" fill="none"/>
+  <path d="M10 10 Q 10 70, 70 70 M10 10 Q 70 10, 70 70" stroke="#b8924a" stroke-width="0.5" fill="none" opacity="0.6"/>
+  <circle cx="10" cy="10" r="2" fill="#b8924a"/>
+</svg>
+
+<div class="container">
+  <header>
+    <div class="monogram">M &amp; A</div>
+    <div class="ornament">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0 L10 6 L16 8 L10 10 L8 16 L6 10 L0 8 L6 6 Z"/></svg>
+    </div>
+    <h1>Confirmare Prezență</h1>
+    <p class="subtitle">Cu mare bucurie vă așteptăm alături de noi în ziua nunții noastre. Vă rugăm să completați formularul de mai jos.</p>
+  </header>
+
+  <div class="card">
+    <form id="rsvp-form">
+      <div class="field">
+        <label for="nume">Nume și prenume <span class="required">·</span></label>
+        <input type="text" id="nume" name="nume" required placeholder="Numele dumneavoastră complet">
+      </div>
+
+      <div class="field">
+        <label for="persoane">Număr de persoane <span class="required">·</span></label>
+        <div class="number-wrap">
+          <button type="button" class="num-btn" onclick="adjustNum(-1)">−</button>
+          <input type="number" id="persoane" name="persoane" min="1" max="20" value="1" required>
+          <button type="button" class="num-btn" onclick="adjustNum(1)">+</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Aveți nevoie de cazare? <span class="required">·</span></label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="caz-da" name="cazare" value="Da" required>
+            <label for="caz-da">Da</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="caz-nu" name="cazare" value="Nu" required>
+            <label for="caz-nu">Nu</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="alergii">Alergii sau restricții alimentare</label>
+        <textarea id="alergii" name="alergii" placeholder="Menționați orice alergii sau preferințe alimentare..."></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">Trimite Confirmarea</button>
+    </form>
+
+    <div class="success-state" id="success" style="display:none;">
+      <div class="check">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M8 16 L14 22 L24 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>Mulțumim</h2>
+      <p>Confirmarea dumneavoastră a fost înregistrată. Abia așteptăm să vă revedem!</p>
+    </div>
+  </div>
+</div>
+
+<button class="admin-link" onclick="openAdmin()">Administrator</button>
+
+<!-- Admin modal -->
+<div class="modal-backdrop" id="admin-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAdmin()">×</button>
+
+    <!-- Password screen -->
+    <div id="password-screen">
+      <h2>Acces Administrator</h2>
+      <div class="password-form">
+        <div class="field">
+          <label for="pwd">Parolă</label>
+          <input type="password" id="pwd" autocomplete="off">
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="checkPwd()">Intră</button>
+        <div class="error-msg" id="pwd-error"></div>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" style="display:none;">
+      <h2>Răspunsuri Invitați</h2>
+      <div id="dashboard-content" class="loading">Se încarcă...</div>
+      <div class="actions" style="margin-top:24px;">
+        <button class="btn btn-primary" onclick="exportCSV()">⬇ Export CSV (Excel)</button>
+        <button class="btn" onclick="refreshData()">↻ Reîmprospătează</button>
+        <button class="btn btn-danger" onclick="clearAll()">Șterge tot</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============ CONFIG ============
+  const ADMIN_PASSWORD = 'mirele2026'; // ⚠️ Schimbă această parolă!
+  // ================================
+
+  const STORAGE_KEY = 'rsvp:response:';
+
+  function adjustNum(delta) {
+    const inp = document.getElementById('persoane');
+    let val = parseInt(inp.value) || 1;
+    val = Math.max(1, Math.min(20, val + delta));
+    inp.value = val;
+  }
+
+  // Submit form
+  document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Se trimite...';
+
+    const data = {
+      id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+      nume: document.getElementById('nume').value.trim(),
+      persoane: parseInt(document.getElementById('persoane').value) || 1,
+      cazare: document.querySelector('input[name="cazare"]:checked')?.value || '',
+      alergii: document.getElementById('alergii').value.trim(),
+      data_inregistrarii: new Date().toISOString()
+    };
+
+    try {
+      const result = await window.storage.set(STORAGE_KEY + data.id, JSON.stringify(data), true);
+      if (!result) throw new Error('Storage failed');
+      document.getElementById('rsvp-form').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+    } catch (err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = 'Trimite Confirmarea';
+      alert('Ne pare rău, a apărut o eroare. Vă rugăm să încercați din nou.');
+    }
+  });
+
+  // Admin
+  function openAdmin() {
+    document.getElementById('admin-modal').classList.add('show');
+    document.getElementById('password-screen').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('pwd').value = '';
+    document.getElementById('pwd-error').textContent = '';
+    setTimeout(() => document.getElementById('pwd').focus(), 100);
+  }
+  function closeAdmin() {
+    document.getElementById('admin-modal').classList.remove('show');
+  }
+  document.getElementById('pwd').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkPwd();
+  });
+
+  function checkPwd() {
+    const val = document.getElementById('pwd').value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById('password-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadResponses();
+    } else {
+      document.getElementById('pwd-error').textContent = 'Parolă incorectă';
+    }
+  }
+
+  async function loadResponses() {
+    const container = document.getElementById('dashboard-content');
+    container.innerHTML = '<div class="loading">Se încarcă răspunsurile...</div>';
+    try {
+      const list = await window.storage.list(STORAGE_KEY, true);
+      const keys = (list?.keys) || [];
+      if (keys.length === 0) {
+        container.innerHTML = '<div class="empty-state">Niciun răspuns încă. Răspunsurile invitaților vor apărea aici.</div>';
+        return;
+      }
+      const responses = [];
+      for (const key of keys) {
+        try {
+          const r = await window.storage.get(key, true);
+          if (r?.value) responses.push(JSON.parse(r.value));
+        } catch (e) { console.error('Skip:', key, e); }
+      }
+      responses.sort((a, b) => new Date(b.data_inregistrarii) - new Date(a.data_inregistrarii));
+      renderDashboard(responses);
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = '<div class="empty-state">Eroare la încărcarea răspunsurilor.</div>';
+    }
+  }
+
+  function renderDashboard(responses) {
+    const total = responses.length;
+    const totalPersoane = responses.reduce((s, r) => s + (r.persoane || 0), 0);
+    const cuCazare = responses.filter(r => r.cazare === 'Da').length;
+    const cuAlergii = responses.filter(r => r.alergii && r.alergii.length > 0).length;
+
+    let html = `
+      <div class="stats-row">
+        <div class="stat"><div class="stat-num">${total}</div><div class="stat-label">Răspunsuri</div></div>
+        <div class="stat"><div class="stat-num">${totalPersoane}</div><div class="stat-label">Total persoane</div></div>
+        <div class="stat"><div class="stat-num">${cuCazare}</div><div class="stat-label">Cer cazare</div></div>
+        <div class="stat"><div class="stat-num">${cuAlergii}</div><div class="stat-label">Cu alergii</div></div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr>
+          <th>Nume</th><th>Persoane</th><th>Cazare</th><th>Alergii</th><th>Data</th><th></th>
+        </tr></thead><tbody>
+    `;
+    for (const r of responses) {
+      const data = new Date(r.data_inregistrarii).toLocaleString('ro-RO', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+      html += `<tr>
+        <td>${escapeHtml(r.nume)}</td>
+        <td style="text-align:center">${r.persoane}</td>
+        <td>${escapeHtml(r.cazare)}</td>
+        <td>${escapeHtml(r.alergii) || '—'}</td>
+        <td style="white-space:nowrap;font-size:13px;color:var(--ink-soft)">${data}</td>
+        <td class="delete-cell"><button onclick="deleteResponse('${r.id}')" title="Șterge">✕</button></td>
+      </tr>`;
+    }
+    html += '</tbody></table></div>';
+    document.getElementById('dashboard-content').innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function deleteResponse(id) {
+    if (!confirm('Sigur dorești să ștergi acest răspuns?')) return;
+    try {
+      await window.storage.delete(STORAGE_KEY + id, true);
+      loadResponses();
+    } catch (err) { alert('Eroare la ștergere.'); }
+  }
+
+  async function refreshData() { loadResponses(); }
+
+  async function clearAll() {
+    if (!confirm('Atenție! Vei șterge TOATE răspunsurile. Continui?')) return;
+    if (!confirm('Ești absolut sigur? Această acțiune nu poate fi anulată.')) return;
+    try {
+      const list = await window.storage.list(STORAGE_KEY, true);
+      const keys = (list?.keys) || [];
+      for (const k of keys) await window.storage.delete(k, true);
+      loadResponses();
+    } catch (err) { alert('Eroare la ștergere.'); }
+  }
+
+  async function exportCSV() {
+    try {
+      const list = await window.storage.list(STORAGE_KEY, true);
+      const keys = (list?.keys) || [];
+      if (keys.length === 0) { alert('Nu există răspunsuri de exportat.'); return; }
+      const responses = [];
+      for (const key of keys) {
+        try {
+          const r = await window.storage.get(key, true);
+          if (r?.value) responses.push(JSON.parse(r.value));
+        } catch (e) {}
+      }
+      responses.sort((a, b) => new Date(a.data_inregistrarii) - new Date(b.data_inregistrarii));
+
+      const headers = ['Nume', 'Numar persoane', 'Cazare', 'Alergii', 'Data inregistrarii'];
+      const rows = responses.map(r => [
+        r.nume, r.persoane, r.cazare, r.alergii || '',
+        new Date(r.data_inregistrarii).toLocaleString('ro-RO')
+      ]);
+      const csv = [headers, ...rows].map(row =>
+        row.map(cell => {
+          const s = String(cell ?? '');
+          return /[",\n;]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+        }).join(',')
+      ).join('\n');
+
+      const BOM = '\uFEFF'; // Excel UTF-8 friendly
+      const blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'confirmari-nunta-' + new Date().toISOString().slice(0,10) + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert('Eroare la export.');
+    }
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('admin-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'admin-modal') closeAdmin();
+  });
+</script>
+
+</body>
+</html>
